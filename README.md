@@ -1,24 +1,33 @@
-# tactic-priors
+# Generated Formal Theorem Proofs
 
-**How much of neural theorem-proving performance is explained by simple
-statistical priors?**
+**Approximately a quarter of miniF2F is trivially provable -- by a sampler
+that never looks at the goal.**
 
-Neural provers for Lean 4 are typically compared against each other, rarely
-against the dumbest possible baseline. This repository asks what a
-*context-free frequency table* of Mathlib4 tactics -- and its trigram
-extension -- can prove on miniF2F when plugged into exactly the same
-best-first proof search as a 7B-parameter neural prover, under exactly the
-same search budget.
+The baselines in this repository are *goal-blind*: neither the unigram nor
+the trigram ever reads the theorem statement or the proof state. They sample
+tactics from the empirical MLE tactic distribution of Mathlib4 (LeanDojo
+Benchmark 4) -- the unigram by raw frequency, the trigram conditioned only on
+the two *preceding tactics*, still never on the goal. Plugged into a standard
+best-first proof search, the unigram proves **26.2%** of miniF2F Test
+(64/244) -- about a quarter of the benchmark -- and the goal-blind trigram
+proves **22.1%** (54/244).
+
+The second finding: under exactly the same search budget, a 7B-parameter
+neural prover (BFS-Prover reproduction) proves **49.6%** (121/244). The
+goal-blind frequency table therefore accounts for roughly half of the neural
+system's small-budget performance -- a baseline that neural provers are
+rarely compared against.
 
 ## Approach
 
 1. Count every traced tactic invocation in LeanDojo Benchmark 4
    (`random/train.json`, Mathlib4) to obtain an empirical tactic
    distribution (16,850 distinct tactic strings occurring more than once).
-2. Build two priors: a **unigram** model (sample tactics by frequency,
-   ignore the proof state) and a **trigram** model (condition on the two
-   preceding tactics, with rare tactics collapsed into a pseudo-word below
-   an empirical-probability threshold of 1e-5).
+2. Build two goal-blind priors: a **unigram** model (sample tactics by
+   frequency, ignore the proof state entirely) and a **trigram** model
+   (condition on the two preceding tactics -- never on the goal -- with rare
+   tactics collapsed into a pseudo-word below an empirical-probability
+   threshold of 1e-5).
 3. Evaluate all systems with the same W x K x N best-first search driver
    over LeanDojo: W candidate tactics per expanded state, N frontier
    expansions per pass, K independent passes, frontier re-selected by
@@ -29,27 +38,38 @@ same search budget.
 
 | System | Params / size | Pass rate |
 |---|---|---|
+| Unigram prior (goal-blind) | ~1.3 MB pickle | **26.2%** (64/244) |
+| Trigram prior (goal-blind) | ~13 MB pickle | **22.1%** (54/244) |
 | BFS-Prover (reproduction, same budget) | ~7B | **49.6%** (121/244) |
-| Unigram prior | ~1.3 MB pickle | **26.2%** (64/244) |
-| Trigram prior | ~13 MB pickle | **22.1%** (54/244) |
 | BFS-Prover paper (arXiv:2502.03438), budget 2048x2x600 | ~7B | 72.95% (external reference) |
 
 ## Key findings
 
-- **Priors get you about half.** A 1.3 MB state-blind frequency table
-  proves 64 of the 121 theorems the 7B prover proves under the same budget
-  (26.2% vs 49.6% pass rate, a ratio of 0.53). Roughly half of
-  small-budget neural proving performance on miniF2F is explained by
-  "guess popular tactics".
+- **About a quarter of miniF2F falls to goal-blind sampling.** A 1.3 MB
+  frequency table that never inspects the goal proves 64/244 theorems
+  (26.2%); the trigram, equally goal-blind, proves 54/244 (22.1%). That
+  slice of the benchmark is solved by "guess popular Mathlib4 tactics" --
+  no reading of the statement required.
+- **The 7B prover roughly doubles the goal-blind baseline at this budget.**
+  BFS-Prover proves 121/244 (49.6%) under the same W=3 K=10 N=10 search,
+  vs 64/244 for the unigram -- a pass-rate ratio of 0.53. Roughly half of
+  small-budget neural proving performance on miniF2F is explained by tactic
+  popularity alone.
 - **More context, fewer proofs: trigram < unigram.** Conditioning on the
   two preceding tactics *reduces* search performance (22.1% vs 26.2%). The
   notebook's held-out analysis shows why this is a search effect, not a
   modelling failure -- see `notebooks/analysis.ipynb` for the measured
   proposal-diversity numbers.
-- **The baselines are not a strict subset of the prover.** In the solved-set
-  snapshot (`artifacts/solved_indexes.json`), several theorems are solved
-  by the n-gram baselines but missed by BFS-Prover; exact overlap counts
-  are computed in the notebook.
+- **The baselines are not a strict subset of the prover (snapshot
+  evidence).** `artifacts/solved_indexes.json` is an *intermediate
+  snapshot* exported from the cluster comparison script -- it reflects
+  98/44/50 solved theorems (BFS-Prover/unigram/trigram) out of 244, i.e. it
+  predates the final passes that produced the aggregated counts 121/64/54.
+  Within that snapshot, several theorems are solved by the n-gram baselines
+  but missed by BFS-Prover; exact overlap counts are computed in the
+  notebook and labelled as snapshot-level. The final per-pass evaluation
+  logs live on the university cluster and are not distributed with this
+  repository.
 
 ## Figures
 
@@ -70,9 +90,9 @@ same search budget.
 | 3. Lean solutions (human-written) | miniF2F proofs replacing upstream `sorry` | `minif2f_solutions/` (79 Valid + 2 Test; see its README for licensing) |
 
 ```
-tactic-priors/
+generated-formal-theorem-proofs/
 ├── src/tactic_priors/      # ngram_models, build_distribution, search
-├── artifacts/              # tactic CSV, trained pickles, solved indexes
+├── artifacts/              # tactic CSV, trained pickles, solved-index snapshot
 ├── notebooks/analysis.ipynb# executed analysis (figures reproducible offline)
 ├── figures/                # publication figures (PNG 300dpi + SVG)
 ├── minif2f_solutions/      # Lean 4 proofs (statements: Apache-2.0 upstream)
@@ -81,10 +101,14 @@ tactic-priors/
 └── tests/                  # pytest (CPU-only)
 ```
 
+The Python package is named `tactic_priors` (`import tactic_priors`); the
+module and artifact names predate the project name and are kept stable so
+the committed pickles, notebook, and tests keep working unchanged.
+
 ## Reproduce tier 1
 
 ```bash
-git clone https://github.com/amitaminov/tactic-priors.git && cd tactic-priors
+git clone https://github.com/amitaminov/generated-formal-theorem-proofs.git && cd generated-formal-theorem-proofs
 python -m venv .venv && . .venv/bin/activate   # or .venv\Scripts\activate
 pip install -e ".[dev]"
 pytest -q                                       # all CPU-only tests

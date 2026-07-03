@@ -130,7 +130,9 @@ reference for the baselines above.
   intermediate comparison snapshot exported from the cluster; its set sizes
   (98/44/50) are smaller than the final aggregated counts (121/64/54)
   because it predates the last passes of each run. Overlap conclusions in
-  the notebook are drawn from the snapshot and labelled as such.
+  the notebook are drawn from the snapshot and labelled as such. The
+  final per-pass evaluation logs live on the university cluster and are
+  not distributed with this repository.
 - **Statement-level contamination is not controlled.** Mathlib4 tactic
   frequencies are used to prove miniF2F theorems; the domains differ, but
   no de-duplication analysis was performed.

@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tactic-priors"
+name = "generated-formal-theorem-proofs"
 version = "0.1.0"
 description = "Empirical tactic-distribution baselines vs. neural tactic generation for automated theorem proving in Lean 4"
 readme = "README.md"
