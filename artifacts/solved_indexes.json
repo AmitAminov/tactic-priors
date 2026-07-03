@@ -1,0 +1,6 @@
+{
+  "description": "Indexes of miniF2F Test theorems (LeanDojo traced-theorem order, 244 theorems) proved by each model in the W=3, K=10, N=10 evaluation. Snapshot exported from the cluster comparison script (objects/compare_proof_indexes.py); see notebooks/analysis.ipynb for the overlap analysis and a note on how these snapshot sets relate to the final aggregated pass rates.",
+  "bfs_prover": [0, 4, 5, 7, 9, 11, 12, 14, 15, 18, 21, 23, 25, 27, 29, 32, 33, 34, 35, 39, 41, 42, 43, 44, 49, 52, 54, 59, 61, 67, 68, 71, 72, 77, 80, 82, 84, 85, 89, 91, 92, 93, 94, 96, 97, 101, 102, 107, 118, 120, 121, 123, 129, 131, 132, 133, 136, 137, 138, 142, 144, 145, 146, 153, 158, 159, 160, 161, 162, 168, 171, 172, 175, 177, 178, 179, 181, 184, 186, 187, 189, 190, 192, 198, 199, 202, 207, 214, 217, 225, 228, 230, 234, 236, 238, 240, 241, 242],
+  "unigram": [0, 3, 5, 9, 11, 14, 15, 23, 32, 34, 35, 41, 42, 43, 44, 51, 52, 54, 61, 67, 68, 71, 72, 77, 80, 84, 85, 184, 186, 187, 190, 198, 199, 202, 207, 214, 217, 225, 228, 236, 238, 240, 241, 242],
+  "trigram": [3, 5, 9, 11, 14, 15, 21, 32, 35, 41, 42, 43, 44, 51, 52, 54, 61, 67, 68, 71, 72, 77, 85, 89, 95, 96, 102, 107, 118, 120, 126, 10, 158, 159, 160, 172, 184, 186, 187, 190, 198, 199, 202, 207, 214, 217, 225, 228, 234, 242]
+}
