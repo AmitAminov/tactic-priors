@@ -36,12 +36,15 @@ rarely compared against.
 
 ## Results (miniF2F Test, 244 theorems, W=3 K=10 N=10)
 
-| System | Params / size | Pass rate |
+| System | Params / size | Pass rate (95% CI) |
 |---|---|---|
-| Unigram prior (goal-blind) | ~1.3 MB pickle | **26.2%** (64/244) |
-| Trigram prior (goal-blind) | ~13 MB pickle | **22.1%** (54/244) |
-| BFS-Prover (reproduction, same budget) | ~7B | **49.6%** (121/244) |
+| Unigram prior (goal-blind) | ~1.3 MB pickle | **26.2%** [21.1%, 32.1%] (64/244) |
+| Trigram prior (goal-blind) | ~13 MB pickle | **22.1%** [17.4%, 27.7%] (54/244) |
+| BFS-Prover (reproduction, same budget) | ~7B | **49.6%** [43.4%, 55.8%] (121/244) |
 | BFS-Prover paper (arXiv:2502.03438), budget 2048x2x600 | ~7B | 72.95% (external reference) |
+
+Bracketed intervals are Wilson 95% binomial confidence intervals over the
+n=244 theorems of miniF2F Test.
 
 ## Key findings
 
@@ -55,10 +58,18 @@ rarely compared against.
   vs 64/244 for the unigram -- a pass-rate ratio of 0.53. Roughly half of
   small-budget neural proving performance on miniF2F is explained by tactic
   popularity alone.
-- **More context, fewer proofs: trigram < unigram.** Conditioning on the
-  two preceding tactics *reduces* search performance (22.1% vs 26.2%). The
-  notebook's held-out analysis shows why this is a search effect, not a
-  modelling failure -- see `notebooks/analysis.ipynb` for the measured
+- **More context does not buy more proofs: unigram vs trigram is within
+  statistical noise at this budget.** The trigram's observed pass rate is
+  lower (22.1% vs 26.2%), but over 244 theorems the difference is not
+  statistically distinguishable (unpaired two-proportion z ~ 1.06; the
+  Wilson 95% CIs overlap substantially), so we do not claim the trigram is
+  *worse* -- only that conditioning on the two preceding tactics buys no
+  measurable search improvement. The prover-vs-unigram gap, by contrast, is
+  robust (z ~ 5.32). The notebook's held-out analysis supplies the
+  mechanism for why the extra context should *not* be expected to help
+  search even though it improves next-tactic prediction: placeholder
+  probability mass, tiny conditional supports, and far lower proposal
+  entropy -- see `notebooks/analysis.ipynb` for the measured
   proposal-diversity numbers.
 - **The baselines are not a strict subset of the prover (snapshot
   evidence).** `artifacts/solved_indexes.json` is an *intermediate
@@ -69,7 +80,10 @@ rarely compared against.
   but missed by BFS-Prover; exact overlap counts are computed in the
   notebook and labelled as snapshot-level. The final per-pass evaluation
   logs live on the university cluster and are not distributed with this
-  repository.
+  repository. For the same reason, a paired per-theorem comparison
+  (McNemar's test) of unigram vs trigram is not yet possible from the
+  committed artifacts; this repository commits to reporting it once those
+  per-pass logs land.
 
 ## Figures
 
