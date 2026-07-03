@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tactic-priors"
+version = "0.1.0"
+description = "Empirical tactic-distribution baselines vs. neural tactic generation for automated theorem proving in Lean 4"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Amit Aminov", email = "amitaminov1@gmail.com" }]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "networkx>=3.0",
+    "tqdm>=4.65",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "ruff>=0.4",
+    "jupyter>=1.0",
+    "nbconvert>=7.0",
+    "ipykernel>=6.0",
+]
+# Cluster-only extras: the proof-search evaluation driver additionally needs
+# lean_dojo (and, for the neural prover, torch + transformers). These are NOT
+# required for the statistical models, artifacts, notebook, or tests.
+cluster = [
+    "lean-dojo==2.2.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+extend-exclude = ["notebooks", "minif2f_solutions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+ignore = ["E501"]

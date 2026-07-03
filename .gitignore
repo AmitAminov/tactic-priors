@@ -1,0 +1,25 @@
+# LeanDojo Benchmark 4 JSON dumps are several GB -- download separately (see README).
+leandojo_benchmark_4/
+*.jsonl
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Secrets -- never commit credentials
+.env
+*.pem
