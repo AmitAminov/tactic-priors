@@ -154,7 +154,7 @@ proving. Ongoing work on the cluster: RL fine-tuning of tactic generators
 
 ## Contact
 
-Amit Aminov -- amitaminov1@gmail.com
+Amit Aminov -- amit.aminov@mail.huji.ac.il
 
 ## License
 

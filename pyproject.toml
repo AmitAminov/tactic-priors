@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Empirical tactic-distribution baselines vs. neural tactic generation for automated theorem proving in Lean 4"
 readme = "README.md"
 license = { text = "MIT" }
-authors = [{ name = "Amit Aminov", email = "amitaminov1@gmail.com" }]
+authors = [{ name = "Amit Aminov", email = "amit.aminov@mail.huji.ac.il" }]
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24",
