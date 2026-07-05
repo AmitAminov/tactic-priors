@@ -21,9 +21,10 @@ Every traced tactic invocation in the training split is counted verbatim
 observed exactly once are dropped and the distribution is renormalised over
 the remaining 16,850 distinct tactic strings (454 of them span multiple
 lines, so the raw CSV has 17,581 physical lines), giving
-`artifacts/empirical_tactics_probability_mathlib4.csv` (~1.3 MB as a pickled
-model). The unigram model proposes tactics by sampling this distribution
-without replacement, ignoring the proof state entirely.
+`artifacts/empirical_tactics_probability_mathlib4.csv`. The unigram model has
+**16,850 parameters** -- one stored relative frequency per distinct tactic --
+and proposes tactics by sampling this distribution without replacement,
+ignoring the proof state entirely.
 
 ## 3. Trigram model with pseudo-tactic mechanism
 
@@ -36,8 +37,10 @@ whose empirical probability falls below the threshold `1e-5`
 counting. This keeps the context space tractable and reserves explicit
 probability mass for the tail. At sampling time, a drawn pseudo-tactic is
 materialised as a uniformly random tactic from the rare-tactic pool, with
-its probability floored at the threshold value. The trained model
-(`artifacts/trigram_mathlib4.pkl`) is ~13 MB.
+its probability floored at the threshold value. The trigram model stores
+41,204 conditional probabilities P(w3|w1,w2) across 20,120 (w1,w2) contexts
+(sum of per-context support sizes) in `artifacts/trigram_mathlib4.pkl`,
+i.e. **41,204 parameters**.
 
 **Smoothing.** The cleaned package implements Witten-Bell interpolation
 between the trigram and bigram estimates,

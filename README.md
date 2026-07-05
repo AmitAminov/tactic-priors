@@ -14,9 +14,10 @@ proves **22.1%** (54/244).
 
 The second finding: under exactly the same search budget, a 7B-parameter
 neural prover (BFS-Prover reproduction) proves **49.6%** (121/244). The
-goal-blind frequency table therefore accounts for roughly half of the neural
-system's small-budget performance -- a baseline that neural provers are
-rarely compared against.
+goal-blind frequency table -- 16,850 parameters, roughly 415,000x fewer than
+the prover's ~7B -- therefore accounts for roughly half of the neural
+system's small-budget performance, a baseline that neural provers are rarely
+compared against.
 
 ## Approach
 
@@ -36,10 +37,10 @@ rarely compared against.
 
 ## Results (miniF2F Test, 244 theorems, W=3 K=10 N=10)
 
-| System | Params / size | Pass rate (95% CI) |
+| System | Parameters | Pass rate (95% CI) |
 |---|---|---|
-| Unigram prior (goal-blind) | ~1.3 MB pickle | **26.2%** [21.1%, 32.1%] (64/244) |
-| Trigram prior (goal-blind) | ~13 MB pickle | **22.1%** [17.4%, 27.7%] (54/244) |
+| Unigram prior (goal-blind) | 16,850 | **26.2%** [21.1%, 32.1%] (64/244) |
+| Trigram prior (goal-blind) | 41,204 | **22.1%** [17.4%, 27.7%] (54/244) |
 | BFS-Prover (reproduction, same budget) | ~7B | **49.6%** [43.4%, 55.8%] (121/244) |
 | BFS-Prover paper (arXiv:2502.03438), budget 2048x2x600 | ~7B | 72.95% (external reference) |
 
@@ -48,11 +49,11 @@ n=244 theorems of miniF2F Test.
 
 ## Key findings
 
-- **About a quarter of miniF2F falls to goal-blind sampling.** A 1.3 MB
-  frequency table that never inspects the goal proves 64/244 theorems
-  (26.2%); the trigram, equally goal-blind, proves 54/244 (22.1%). That
-  slice of the benchmark is solved by "guess popular Mathlib4 tactics" --
-  no reading of the statement required.
+- **About a quarter of miniF2F falls to goal-blind sampling.** A goal-blind
+  frequency table of 16,850 parameters that never inspects the goal proves
+  64/244 theorems (26.2%); the trigram, equally goal-blind, proves 54/244
+  (22.1%). That slice of the benchmark is solved by "guess popular Mathlib4
+  tactics" -- no reading of the statement required.
 - **The 7B prover roughly doubles the goal-blind baseline at this budget.**
   BFS-Prover proves 121/244 (49.6%) under the same W=3 K=10 N=10 search,
   vs 64/244 for the unigram -- a pass-rate ratio of 0.53. Roughly half of
