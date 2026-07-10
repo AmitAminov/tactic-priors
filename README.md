@@ -1,5 +1,7 @@
 # Generated Formal Theorem Proofs
 
+[![CI](https://github.com/AmitAminov/tactic-priors/actions/workflows/ci.yml/badge.svg)](https://github.com/AmitAminov/tactic-priors/actions/workflows/ci.yml)
+
 **Approximately a quarter of miniF2F is trivially provable -- by a sampler
 that never looks at the goal.**
 
@@ -161,3 +163,12 @@ Amit Aminov -- amit.aminov@mail.huji.ac.il
 MIT for original code and proofs; miniF2F theorem statements under
 `minif2f_solutions/` are Apache-2.0 (OpenAI, Lean 4 port by Kaiyu Yang).
 See [LICENSE](LICENSE) and [minif2f_solutions/README.md](minif2f_solutions/README.md).
+
+## Tests
+
+Run the suite with `pytest`. CI runs on every push via GitHub Actions and is currently green.
+
+The suite checks:
+- goal-blind **unigram** and **trigram** samplers reproduce their documented miniF2F pass rates
+- best-first **search-graph** construction and expansion
+- **artifact integrity** — the committed frequency tables load and match expected values
