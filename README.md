@@ -19,7 +19,7 @@ neural prover (BFS-Prover reproduction) proves **49.6%** (121/244). The
 goal-blind frequency table -- 16,850 parameters, roughly 415,000x fewer than
 the prover's ~7B -- therefore accounts for roughly half of the neural
 system's small-budget performance, a baseline that neural provers are rarely
-compared against.
+compared against (in 2021, SOTA GPT-f produced 29% success rate, comparable to the baseline).
 
 ## Approach
 
